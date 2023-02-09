@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Smartmeter Signature Checker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <style>
+        .content {
+            padding: 25px 100px 75px 100px;
+            background: #ffffff;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+        }
+        .content-text {
+            width: 95%;
+            margin: auto;
+        }
+        h2 {
+            color: #00B5AD;
+            padding-top: 25px;
+        }
+        hr{
+            color: #c4c4c4;
+        }
+        body {
+            font-family: Verdana,Arial,Helvetica,sans-serif;
+            background-color: #f3f3f3;
+            font-size: 13px;
+            line-height: 1.42857143;
+            color: #333;
+        }
+
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+<div class="content">
+    <h2>Smartmeter Signature Checker</h2>
+    <div class="content-text">
+        <table>
+          <tr>
+            <th>Device Name</th>
+            <th>Last Value</th>
+            <th>Timestamp</th>
+            <th>Verified</th>
+          </tr>
+        {% for device_id, value_data in devices %}
+          <tr>
+            <td>{{ device_id }}</td>
+            <td>{{ value_data.get('total') }}</td>
+            <td>{{ value_data.get('time') }}</td>
+            <td>{{ value_data.get('verified') }}</td>
+          </tr>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+</body>
+
+<footer>
+<div class="content">
+    <div class="content-text">
+        <a href="https://demo.nowum.fh-aachen.de/info.html">Impress + Data Protection</a></br>
+    </div>
+</div>
+</footer>
+
+</html>
