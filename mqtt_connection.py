@@ -6,31 +6,27 @@ import paho.mqtt.client as mqttClient
 import time
 import json
 from threading import Lock
-
+import os
 
 lock = Lock()
-pub_keys = json.load(open('pub_keys.json'))
+with open('pub_keys.json') as f:
+    pub_keys = json.load(f)
 
 Connected = False  # global variable for the state of the connection
 
-broker_address = "bc4p.nowum.fh-aachen.de"  # Broker address
-port = 1883  # Broker port
-user = "bc4p"  # Connection username
-password = "9ykCLBW3usTuZnoZieAt"  # Connection password
+broker_address = os.getenv('MQTT_BROKER', "bc4p.nowum.fh-aachen.de")
+port = os.getenv('MQTT_PORT', 1883)  # Broker port
+user = os.getenv('MQTT_USER', "bc4p")  # Connection username
+password = os.getenv('MQTT_PASSWORD', "xxx")  # Connection password
 
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-
         print("Connected to broker")
-
         global Connected  # Use global variable
         Connected = True  # Signal connection
-
     else:
-
         print("Connection failed")
-
 
 def on_message(client, userdata, message):
     json_data = json.loads(message.payload)
@@ -75,16 +71,14 @@ def on_message(client, userdata, message):
 
 
 def create_mqtt_loop():
-    client = mqttClient.Client("Python")  # create new instance
-    client.username_pw_set(user, password=password)  # set username and password
-    client.on_connect = on_connect  # attach function to callback
-    client.on_message = on_message  # attach function to callback
-
+    client = mqttClient.Client("Tasmota Meter Verifier")
+    client.username_pw_set(user, password=password)
+    client.on_connect = on_connect
+    client.on_message = on_message
     client.connect(broker_address)  # connect to broker
-
     client.loop_start()  # start the loop
 
-    while Connected != True:  # Wait for connection
+    while not Connected:
         time.sleep(0.1)
 
     client.subscribe("tele/+/SENSOR")
