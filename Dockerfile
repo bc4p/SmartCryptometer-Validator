@@ -4,8 +4,9 @@ WORKDIR /app
 RUN pip install --no-cache-dir Flask gunicorn
 
 COPY ./pub_keys.json /app
-COPY /templates/index.html /app
+COPY /templates /app/templates
 COPY ./mqtt_connection.py /app
+COPY ./gunicorn.conf.py /app
 COPY ./app.py /app
 
 RUN useradd -s /bin/bash admin
