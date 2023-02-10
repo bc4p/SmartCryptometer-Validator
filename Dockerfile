@@ -1,10 +1,12 @@
 FROM python:3.11
 
 WORKDIR /app
-RUN pip install --no-cache-dir Flask gunicorn
+
+COPY ./requirements.txt /app
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./pub_keys.json /app
-COPY /templates /app/templates
+COPY ./templates /app/templates
 COPY ./mqtt_connection.py /app
 COPY ./gunicorn.conf.py /app
 COPY ./app.py /app
