@@ -2,3 +2,4 @@ paho-mqtt
 pynacl
 ed25519
 Flask
+gunicorn
