@@ -59,12 +59,13 @@ def on_message(client, userdata, message):
         }
 
         with lock:
-            with open('data.json', 'r') as f:
-                try:
+            try:
+                with open('data.json', 'r') as f:
                     last_signed_values = json.load(f)
-                except JSONDecodeError:
-                    last_signed_values = {}
-                    print('Error reading json')
+            except Exception:
+                last_signed_values = {}
+                print('Error reading json')
+
             last_signed_values[subtopic] = meter_value
             with open('data.json', 'w') as f:
                 json.dump(last_signed_values, f)
