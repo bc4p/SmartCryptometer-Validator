@@ -41,13 +41,15 @@ def on_message(client, userdata, message):
         end = topic.index('/', start + 1)
 
         subtopic = topic[start + 1:end]
+        
         log.info(f"The public key is: {pub_keys.get(subtopic)}")
         log.info(f"Full Topic:{message.topic}")
-        log.info(f'Message Payload: {json.loads(message.payload)}')
-        key = ed25519.from_ascii(pub_keys.get(subtopic), encoding='hex')
-        signature = ed25519.from_ascii(json_data.get('Signature'), encoding='hex')
-        verify_key = VerifyKey(key)
-        log.info(f'{json_data.get("Time")},{json_data.get("ENERGY").get("Total")}')
+        log.info(f'Message Payload: {json_data}')
+        if pub_keys.get(subtopic): 
+            key = ed25519.from_ascii(pub_keys.get(subtopic), encoding='hex')
+            signature = ed25519.from_ascii(json_data.get('Signature'), encoding='hex')
+            verify_key = VerifyKey(key)
+            log.info(f'{json_data.get("Time")},{json_data.get("ENERGY").get("Total")}')
         try:
             verify_key.verify(smessage=f'{json_data.get("Time")},{json_data.get("ENERGY").get("Total")}'.encode(),
                              signature=signature)
@@ -92,6 +94,7 @@ def create_mqtt_loop():
 
 
 if __name__ == '__main__':
+    logging.basicConfig()
     client = create_mqtt_loop()
     try:
         while True:
